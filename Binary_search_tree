@@ -1,0 +1,176 @@
+/* Ameya N. Kulkarni
+Code to apply binary search tree concept to maintain record of words and their meaning..
+Includes Display in alphabetical order ,, and modify the entries based on their keywords..
+*/
+
+
+#include <iostream>
+using namespace std;
+#include <string.h>
+#include <stdio.h>
+
+class tree;         //Tree Class
+class node;         //Node Class
+
+class node          //Node class
+{
+	char data[20],key[10];
+	node *l,*r;
+		
+friend class tree;  //Tree class declared as friend
+};
+
+
+class tree          //Tree class
+{
+node *root;
+public: 
+	tree()            //Constructor
+	{
+	root=NULL;
+	}
+void create_bst();      //Member functions
+void inorder();
+void inorder1(node *current);
+void modify();
+node *search_modify(node *curr,char keys[]);
+};
+void tree::modify()
+{
+	node *reqnode;
+	reqnode=NULL;
+	char fkey[10];
+	cout<<"\nEnter the KEYWORD to be modified\n";
+	cin>>fkey;
+	reqnode=search_modify(root,fkey);
+	if(reqnode==NULL)
+	{
+		cout<<"\nKEYWORD not present\n";
+	}
+	else{
+	cout<<"\n KEYWORD\tMEANING  ";
+	cout<<"\n"<<(reqnode->key)<<"\t"<<(reqnode->data);}
+}
+
+node *tree::search_modify(node *curr,char keys[])
+{	cout<<keys;
+	node *temp;
+	temp=NULL;
+	if(curr != NULL)
+	{
+		if(strcmp(curr->key,keys)==0)
+		{
+		return curr;
+		}
+		else
+		{
+			if(strcmp(curr->key,keys)<0)
+			{
+			temp=search_modify(curr->l,keys);
+			}
+			else
+			{
+			temp=search_modify(curr->r,keys);
+			}
+		}	
+	}	
+	return temp;
+}
+
+void tree::inorder()
+{	cout<<"\nKEYWORD"<<"\t"<<"MEANING";
+	inorder1(root);
+}
+
+void tree::inorder1(node *current)
+{	
+	if(current!=NULL)
+	{
+	inorder1(current->l);
+	cout<<"\n"<<current->key<<"\t"<<current->data;
+	inorder1(current->r);
+	}
+}
+void tree::create_bst()
+{
+	node *curr,*newnode;
+	int d,flag;
+	char k[10],dta[20];
+	cout<<"\nPress \n1. To enter word\n2. To exit :";
+	cin>>d;
+	while(d==1)
+	{	cout<<"\nEnter the KEYWORD :\t";
+		cin>>k;
+		cout<<"\nEnter the MEANING :\t";
+		cin>>dta;
+		if(root==NULL)
+		{
+			root = new node;
+			strcpy(root->key,k);
+			strcpy(root->data,dta);
+			root->l=NULL;
+			root->r=NULL;
+		}
+		else
+		{	curr=root;
+			flag=0;
+			while(flag==0)
+			{
+				if(strcmp(k,curr->key)<0)
+				{
+					if(curr->l==NULL)
+					{
+						newnode=new node;
+						strcpy(newnode->key,k);
+						strcpy(newnode->data,dta);
+						newnode->l=NULL;
+						newnode->r=NULL;
+						curr->l=newnode;
+						flag=1;
+					}
+					else
+					{
+						curr=curr->l;
+					}
+				
+				}
+				else
+				{
+					if(curr->r==NULL)
+					{
+						newnode=new node;
+						strcpy(newnode->key,k);
+						strcpy(newnode->data,dta);
+						newnode->l=NULL;
+						newnode->r=NULL;
+						curr->r=newnode;
+						flag=1;
+					}
+					else
+					{
+						curr=curr->r;
+					}
+				}	
+			}
+		}
+
+
+
+	cout<<"\nPress \n1. To enter word\n2. To exit :";
+	cin>>d;
+	}
+
+
+}
+
+
+
+int main()
+{
+	tree t1;
+	t1.create_bst();
+	t1.inorder();
+	t1.modify();
+	cout<<"\n";
+	return 0;
+}
